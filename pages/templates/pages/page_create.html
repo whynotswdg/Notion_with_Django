@@ -1,0 +1,16 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}새 페이지 만들기{% endblock %}
+
+{% block content %}
+    <h1>{{ workspace.name }} 워크스페이스에 새 페이지 만들기</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">생성</button>
+    </form>
+
+    <p><a href="{% url 'page_list' workspace_id=workspace.id %}">{{ workspace.name }}로 돌아가기</a></p>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Notion Clone{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'pages/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3><a href="{% url 'workspace_list' %}">동겸의 워크스페이스</a></h3>
+                <button id="sidebar-toggle" class="sidebar-toggle-button" title="사이드바 숨기기">
+                    <span class="toggle-icon"><<</span>
+                </button>
+                <span class="sidebar-header-icon-button" title="새 페이지 만들기 (더미)">
+                    <i class="fas fa-pen-to-square"></i>
+                </span>
+                <p class="sidebar-menu-item">
+                    <i class="fas fa-search"></i>
+                    <span>검색</span>
+                </p>
+                <p class="sidebar-menu-item">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                    <span>Yestion AI</span>
+                </p>
+                <p class="sidebar-menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>홈</span>
+                </p>
+                <p class="sidebar-menu-item">
+                    <i class="fas fa-inbox"></i>
+                    <span>수신함</span>
+                </p>
+            </div>
+            <div class="sidebar-nav">
+                <h4>개인 페이지</h4>
+                <ul>
+                    {% for workspace in all_workspaces_with_pages %}
+                        {% url 'page_list' workspace_id=workspace.id as workspace_url %}
+                        <li {% if request.path == workspace_url %}class="active-workspace"{% endif %}>
+                            <a href="{{ workspace_url }}" class="workspace-link">
+                                <i class="far fa-folder"></i>
+                                <span>{{ workspace.name }}</span>
+                            </a>
+                            {% if workspace.top_level_pages %}
+                                <ul class="sub-pages">
+                                    {% for page in workspace.top_level_pages %}
+                                        {% url 'page_detail' page_id=page.id as page_url %}
+                                        <li {% if request.path == page_url %}class="active-page"{% endif %}>
+                                            <a href="{{ page_url }}" class="sidebar-page-link">
+                                                <i class="far fa-file-lines"></i>
+                                                <span>{{ page.title }}</span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                             <p class="add-page-link">
+                                <a href="{% url 'page_create' workspace_id=workspace.id %}">+ 새 페이지 추가</a>
+                            </p>
+                        </li>
+                    {% empty %}
+                        <li>워크스페이스가 없습니다.</li>
+                    {% endfor %}
+                </ul>
+                <p><a href="{% url 'workspace_create' %}">새 워크스페이스 만들기</a></p>
+            </div>
+        </div>
+         <div class="main-content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    <script src="{% static 'pages/script.js' %}"></script>
+</body>
+</html>

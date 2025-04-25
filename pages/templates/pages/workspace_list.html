@@ -1,0 +1,17 @@
+{% extends 'pages/base.html' %}
+{% block title %}워크스페이스 목록{% endblock %}
+{% block content %}
+    <h1>동겸의 워크스페이스</h1>
+
+    <ul>
+        {% for workspace in all_workspaces_with_pages %}
+            <li class="workspace-item">
+                <a href="{% url 'page_list' workspace_id=workspace.id %}">{{ workspace.name }}</a>
+            </li>
+        {% empty %}
+            <li>아직 생성된 워크스페이스가 없습니다.</li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="{% url 'workspace_create' %}">새 워크스페이스 만들기</a></p>
+{% endblock %}
